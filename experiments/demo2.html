@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>experiment 2</title>
+</head>
+<body style="background-color: #ffbdff;">
+<div style="position: fixed; top: 50%; left: 50%;">
+  <div id="x"></div>
+  <div style="margin-top: 100px" id="y"></div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function(event){
+  let sym = "😵";
+
+  var x=document.getElementById("x");
+  var y=document.getElementById("y");
+
+  x.innerText = sym;
+  x.height = "500px";
+  x.width = "500px";
+
+  x.style.display = "inline-block"
+  x.style.backgroundColor = "transparent";
+  x.style.border = "thin solid black";
+
+  var i = 0;
+
+  const update = () => {
+
+    const s = 5;
+
+    //x.style.transform = `scale(${s}) scaleZ(1.0) rotateX(${i}deg) rotateY(${i}deg)`;
+    x.style.transform = `scale(${s}) skewX(${i}deg)`;
+    x.style.transformOrigin = "0px 0px 0px"
+
+    if (i > 360) {
+      i = 0;
+    } else {
+      i++;
+    }
+
+    y.innerText = i;
+
+    setTimeout(update, 10);
+  };
+
+  update();
+});
+
+</script>
+</body>
+</html>

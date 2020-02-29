@@ -1,0 +1,8 @@
+/build
+/node_modules
+*.lock
+*.log
+lib/*.exe
+lib/*/
+failed_experiments
+publish

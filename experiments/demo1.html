@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>experiment 1</title>
+</head>
+<body style="background-color: #ffbdff;">
+<div id="x"></div>
+<div id="y"><a href="http://westciv.com/tools/3Dtransforms/">http://westciv.com/tools/3Dtransforms/</a></div>
+<div id="z"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate3d">https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate3d</a></div>
+<script>
+document.addEventListener("DOMContentLoaded", function(event){
+let sym = "🆗";
+sym = "🌲";
+
+const e=document.getElementById("x");
+
+e.innerText = sym;
+e.height = "50px";
+e.widht = "50px";
+e.style.display = "inline-block"
+e.style.backgroundColor = "transparent";
+e.style.border = "thin solid black";
+e.style.transform = "matrix3d(1.01757, -0.428571, 0, -0.001071, -0.517857, 0.928571, 0, -0.005179, 0, 0, 1, 0, 100, 100, 0, 1)";
+e.style.transformOrigin = "0px 0px 0px"
+
+const r = document.getElementById("y");
+r.height = "50px";
+r.widht = "200px";
+r.style.display = "inline-block"
+r.style.transform = "scale(0.8) scaleZ(1.0) rotateX(45deg) rotateY(45deg)";
+r.style.perspective = "200";
+r.style.perspectiveOrigin = "50% 50%";
+
+});
+</script>
+</body>
+</html>
