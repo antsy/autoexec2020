@@ -1,6 +1,8 @@
-# Autodemo 2020
+# Autoexec.js 2020
 
 Instanssi demo 2020
+
+![advertisement image](https://instanssi.org/uploads/kompomaatti/entryimages/android.png)
 
 Is very platform dependant.
 

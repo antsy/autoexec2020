@@ -9,7 +9,8 @@ ctx.font = '80px serif';
 ctx.fillText('🏎️', 80, 80);
 
 // fun fact: using `var` everywhere saves space with compression
-var startTime, state, width, height, horizon, carpos, horizontalPizelSize, verticalPixelSize, songplaying, aaudiosources;
+var startTime, state, width, height, horizon, carpos, horizontalPizelSize, verticalPixelSize, songplaying, aaudiosources, webscoket;
+var colorDebug; // DEBUG
 var horizontalResolution = 400;
 var verticalResolution = 225;
 var progress, curvature = 0;
@@ -59,6 +60,12 @@ var palette = [
   [255,255,255]
 ];
 
+var seed = 1;
+var rng = () => {
+  var x = Math.sin(seed++) * 10000;
+  return x - ~~x;
+}
+
 canvas.addEventListener("click", () => {
   console.log('click');
 
@@ -79,6 +86,8 @@ canvas.addEventListener("click", () => {
       bctx.textAlign = 'center';
       bctx.textBaseline = 'bottom';
 
+      webscoket = new WebSocket("ws://valot.party:9910"); // PRODUCTION
+
       console.log(horizontalPizelSize, verticalPixelSize);
 
       requestAnimationFrame(demo);
@@ -91,14 +100,6 @@ function say(message) {
   var msg = new SpeechSynthesisUtterance(message);
   msg.voice = window.speechSynthesis.getVoices()[0];
   window.speechSynthesis.speak(msg);
-}
-
-function getRandomRgb() {
-  var num = Math.round(0xffffff * Math.random());
-  var r = num >> 16;
-  var g = num >> 8 & 255;
-  var b = num & 255;
-  return 'rgb(' + r + ', ' + g + ', ' + b + ')';
 }
 
 const fps = (function () { // DEBUG
@@ -152,7 +153,12 @@ var demo = () => {
 
       if (progress > 8 && !songplaying) {
         playsong(audiosource);
-        colorChanger(...palette[0]);
+        setInterval(() => {
+          if (progress < 56) {
+            var color = ~~progress % 5;
+            colorChanger(...palette[color]);
+          }
+        }, 1e3)
       }
 
       // Go to final stage
@@ -209,7 +215,7 @@ var demo = () => {
 
       //bctx.clearRect (0, 0, width, height);
 
-      horizon = height * 0.44 + (Math.random() - 0.5); // sutkun?
+      horizon = height * 0.44; // + (rng() - 0.5); // sutkun?
       //say('3, 2, 1, 0, the race is on');
       //say('cow nist achee moat or it, colma, cahcsa, ycsi, math khan');
 
@@ -307,8 +313,10 @@ var demo = () => {
       bctx.font = `${carwidth}vw serif`;
       bctx.fillText(car, carpos, height * 0.92);
       bctx.font = `${carwidth*0.12}vw serif`;
+      bctx.filter = `brightness(${Math.abs(Math.sin(progress*2)*20)+85}%)`;
       bctx.fillText(redball, carpos-(width*0.042), height * 0.85);
       bctx.fillText(redball, carpos+(width*0.042), height * 0.85);
+      bctx.filter = 'none';
       bctx.fillStyle='rgb(0,0,0)'
       bctx.font = `${carwidth*0.1}vw monospace`;
       bctx.fillText('ST 520', carpos, height * 0.85);
@@ -327,11 +335,11 @@ var demo = () => {
       bctx.fillText(`curvature: ${curvature.toFixed(2)}`, 100+debugoffset, 100); // DEBUG
       bctx.fillText(`speed: ${speed.toFixed(2)}`, 300+debugoffset, 40); // DEBUG
       bctx.fillText(`fps: ${fps()}`, 300+debugoffset, 60); // DEBUG
-      bctx.fillText(`🪙: ${width/height}`, 300+debugoffset, 80); // DEBUG
+      bctx.fillText(`🪙: ${colorDebug}`, 300+debugoffset, 80); // DEBUG
       break;
     case 5:
       //say('woe ta jah olit sinah');
-      say('That was amazing, You win the race');
+      say('That was amazing, You win the competition');
       state=6;
     case 6: // The end of demo 🏆
 
@@ -362,16 +370,17 @@ var demo = () => {
 console.log('page loaded');
 
 // 💡 Party arena light server
-var webscoket = new WebSocket("ws://valot.party:9910"); // PRODUCTION
+//var webscoket = new WebSocket("ws://valot.party:9910"); // PRODUCTION
 var colorChanger = (red, green, blue) => {
   var colorArray = [1];
   for(var i = 0;i<24;i++) {
-    colorArray.push(1, i, 0, ~~(255*red), ~~(255*green), ~~(255*blue));
+    colorArray.push(1, i, 0, ~~(red), ~~(green), ~~(blue));
   }
   var bytearray = new Uint8Array(colorArray);
   try {
     webscoket.send(bytearray); // PRODUCTION
     console.log(bytearray); // DEBUG
+    colorDebug = `${red},${green},${blue}`; // DEBUG
     //console.log(m.round(red*255, 2), m.round(green*255, 2), m.round(blue*255, 2));
   } catch(e) {
     // When you're at the bat country, never stop.
@@ -379,7 +388,7 @@ var colorChanger = (red, green, blue) => {
 }
 
 var createAudioSource = () => {
-  var ns=()=>Math.random()-Math.random();
+  var ns=()=>rng()-rng();
   var c=Math.ceil;
 
   var ac=new window.AudioContext();
