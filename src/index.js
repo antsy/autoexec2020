@@ -373,6 +373,8 @@ console.log('page loaded');
 //var webscoket = new WebSocket("ws://valot.party:9910"); // PRODUCTION
 var colorChanger = (red, green, blue) => {
   var colorArray = [1];
+  // WHAT KIND OF A MONSTER CHANGES API WITHOUT INCREASING THE VERSION NUMBER
+  colorArray.push(0, 97, 110, 116, 115, 121, 0);
   for(var i = 0;i<24;i++) {
     colorArray.push(1, i, 0, ~~(red), ~~(green), ~~(blue));
   }
