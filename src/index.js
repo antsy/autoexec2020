@@ -375,7 +375,7 @@ var colorChanger = (red, green, blue) => {
   var colorArray = [1];
   // WHAT KIND OF A MONSTER CHANGES API WITHOUT INCREASING THE VERSION NUMBER
   colorArray.push(0, 97, 110, 116, 115, 121, 0);
-  for(var i = 0;i<24;i++) {
+  for(var i = 0;i<28;i++) {
     colorArray.push(1, i, 0, ~~(red), ~~(green), ~~(blue));
   }
   var bytearray = new Uint8Array(colorArray);
